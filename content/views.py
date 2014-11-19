@@ -1,11 +1,19 @@
 from django.views.generic.detail import DetailView
 
-from .models import AbstractContent
-
 
 class ContentDetailView(DetailView):
     context_object_name = 'content'
-    model = AbstractContent
+    template_name = 'content/content.html'
 
-    def get_template_names(self):
-        return self.object.get_template()
+
+class ArticleDetailView(ContentDetailView):
+    template_name = 'content/article.html'
+
+    def get_queryset(self):
+        q = super().get_queryset()
+        q = q.filter(
+            publication_time__year=self.kwargs['year'],
+            publication_time__month=self.kwargs['month'],
+            publication_time__day=self.kwargs['day'],
+        )
+        return q

@@ -28,13 +28,6 @@ class AbstractContent(PolymorphicModel):
     slug = models.SlugField(max_length=255)
     published = models.BooleanField(default=True)
 
-    template = None
-
-    def get_template(self):
-        if not self.template:
-            raise ImproperlyConfigured("Provide a template.")
-        return self.template
-
     def __str__(self):
         return self.title
 
