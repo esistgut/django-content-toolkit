@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+  <head><title></title></head>
+  <body>
+    <script type="text/javascript">
+      if(window.opener.CKEDITOR) {
+          var funcNum = document.cookie.replace(/(?:(?:^|.*;\s*)CKEditorFuncNum\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+          var fileUrl = '{{ obj }}';
+          window.opener.CKEDITOR.tools.callFunction( funcNum, fileUrl );
+          window.close()
+      }
+      opener.dismissAddAnotherPopup(window, "{{ value }}", "{{ obj }}");
+    </script>
+  </body>
+</html>

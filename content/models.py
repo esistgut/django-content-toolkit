@@ -7,7 +7,7 @@ from mptt.models import MPTTModel, TreeForeignKey
 from taggit.managers import TaggableManager
 
 
-class AbstractCategory(MPTTModel):
+class Category(MPTTModel):
     class MPTTMeta:
         order_insertion_by = ['name']
 
@@ -20,10 +20,7 @@ class AbstractCategory(MPTTModel):
         return self.name
 
 
-class AbstractContent(PolymorphicModel):
-    class Meta:
-        abstract = True
-
+class Content(PolymorphicModel):
     title = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255)
     published = models.BooleanField(default=True)
@@ -32,19 +29,25 @@ class AbstractContent(PolymorphicModel):
         return self.title
 
 
-class ArticleMixin(models.Model):
-    class Meta:
-        abstract = True
-
+class Article(Content):
     body = models.TextField()
     publication_time = models.DateTimeField()
     authors = models.ManyToManyField(settings.AUTH_USER_MODEL, verbose_name="authors")
-    categories = models.ManyToManyField(AbstractCategory)
+    categories = models.ManyToManyField(Category)
     tags = TaggableManager(blank=True)
 
 
-class PageMixin(models.Model):
-    class Meta:
-        abstract = True
+class Page(Content):
+    body = models.TextField()
 
-    content = models.TextField()
+
+class MediaItem(Content):
+    file = models.FileField()
+    tags = TaggableManager(blank=True)
+
+    def __str__(self):
+        return self.file.url
+
+
+class MediaColletion(Content):
+    items = models.ManyToManyField(MediaItem)
