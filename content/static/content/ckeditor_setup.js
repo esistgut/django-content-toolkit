@@ -11,7 +11,7 @@ django.jQuery(function(){
         ],
 
 
-        'filebrowserBrowseUrl': '/admin/publish/mediaitem/?_popup=1',
+        'filebrowserBrowseUrl': '/admin/content/mediaitem/?_popup=1',
         'width': 758,
         'height': 400,
         allowedContent: true

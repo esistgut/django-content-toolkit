@@ -1,12 +1,20 @@
 from django import forms
+from django.conf import settings
 from django.db import models
 from django.contrib import admin
 from django.contrib.staticfiles.templatetags.staticfiles import static
 
+from reversion import VersionAdmin
 from sorl.thumbnail import get_thumbnail
 
+from .forms import AtLeastOneRequiredInlineFormSet
+from .models import (
+    ContentTranslation, BaseArticleTranslation, Article, Page,
+    Category, CategoryTranslation, MediaItem, MediaCollection,
+)
 
-class CKModelAdmin(object):
+
+class CKModelAdminMixin(object):
     formfield_overrides = {models.TextField: {'widget': forms.Textarea(attrs={'class': 'ckeditor'})}, }
 
     class Media:
@@ -20,10 +28,13 @@ class CKModelAdmin(object):
         }
 
 
-class CKMediaItemAdmin(admin.ModelAdmin, CKModelAdmin):
-    prepopulated_fields = {'title': ('file',), 'slug': ('file',) }
-
+class CKMediaItemAdmin(admin.ModelAdmin, CKModelAdminMixin):
     list_display = ('thumbnail', 'file', 'title')
+    prepopulated_fields = {'slug': ('file',), }
+
+    @staticmethod
+    def title(obj):
+        return obj.translation.title
 
     def thumbnail(self, obj):
         if self.list_display_links is not None:
@@ -55,3 +66,69 @@ class CKMediaItemAdmin(admin.ModelAdmin, CKModelAdmin):
     def __init__(self, *args, **kwargs):
         self._list_display_links_copy = self.list_display_links
         super().__init__(*args, **kwargs)
+
+
+class TranslationInline(admin.StackedInline):
+    formset = AtLeastOneRequiredInlineFormSet
+    max = len(settings.LANGUAGES)
+    extra = 0
+
+
+class BaseArticleTranslationInline(TranslationInline, CKModelAdminMixin):
+    model = BaseArticleTranslation
+    formset = AtLeastOneRequiredInlineFormSet
+    max = len(settings.LANGUAGES)
+    extra = 0
+
+
+class BaseArticleAdmin(VersionAdmin, CKModelAdminMixin):
+    inlines = (BaseArticleTranslationInline, )
+
+
+class ContentTranslationInline(admin.StackedInline, CKModelAdminMixin):
+    model = ContentTranslation
+    max = len(settings.LANGUAGES)
+    extra = 0
+
+
+class MediaItemAdmin(CKMediaItemAdmin):
+    inlines = (ContentTranslationInline, )
+
+
+class CategoryTranslationInline(admin.StackedInline):
+    model = CategoryTranslation
+    max = len(settings.LANGUAGES)
+    extra = 1
+
+
+class CategoryAdmin(admin.ModelAdmin):
+    inlines = (CategoryTranslationInline, )
+
+
+admin.site.register(Category, CategoryAdmin)
+admin.site.register(Article, BaseArticleAdmin)
+
+admin.site.register(MediaItem, MediaItemAdmin)
+admin.site.register(MediaCollection)
+
+'''
+from polymorphic.admin import PolymorphicParentModelAdmin, PolymorphicChildModelAdmin
+
+
+class ContentChildAdmin(PolymorphicChildModelAdmin, CKModelAdminMixin):
+    base_model = Content
+
+
+class ChildBaseArticleAdmin(BaseArticleAdmin, ContentChildAdmin):
+    pass
+
+
+class ContentAdmin(PolymorphicParentModelAdmin):
+    base_model = Content
+    child_models = (
+        (Article, ContentChildAdmin),
+        (Page, ContentChildAdmin),
+    )
+
+admin.site.register(Content, ContentAdmin)
+'''
