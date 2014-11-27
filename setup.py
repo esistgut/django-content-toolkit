@@ -16,13 +16,6 @@ setup(
     author='Giacomo Graziosi',
     author_email='g.graziosi@gmail.com',
     packages=['content'],
-    package_data={
-        'content': [
-            'content/static/content/ckeditor_setup.js',
-            'content/static/content/ckeditor_style_override.css',
-            'content/templates/admin/popup_response.html',
-        ],
-    },
     include_package_data=True,
     install_requires=[
         'Django',

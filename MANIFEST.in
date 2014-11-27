@@ -1,1 +1,4 @@
 include *.rst LICENSE
+include content/static/content/ckeditor_setup.js
+include content/static/content/ckeditor_style_override.css
+include content/templates/admin/popup_response.html
