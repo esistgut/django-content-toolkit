@@ -8,18 +8,19 @@ def read(*paths):
 
 setup(
     name='django-content-toolkit',
-    version='0.1.1',
+    version='0.1.2',
     description='A simple Django package for model translations',
     long_description=(read('README.rst')),
     url='https://github.com/esistgut/django-content-toolkit',
     license='MIT',
     author='Giacomo Graziosi',
     author_email='g.graziosi@gmail.com',
-    py_modules=['content'],
+    packages=['content'],
     include_package_data=True,
     install_requires=[
        'Django',
        'django-polymorphic',
+       'django-reversion',
        'django-mptt',
        'django-taggit'
     ],
