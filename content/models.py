@@ -22,7 +22,7 @@ class TranslatedModel(models.Model):
             return self.translations.get(language=settings.LANGUAGE_CODE)
 
 
-class AbstractTranslation(models.Model):
+class AbstractTranslation(PolymorphicModel):
     # https://code.djangoproject.com/ticket/16732
     class Meta:
         abstract = True
