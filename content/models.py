@@ -39,7 +39,6 @@ class AbstractTranslation(PolymorphicModel):
 
 
 class Category(TranslatedModel, MPTTModel):
-    slug = models.SlugField(max_length=255)
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children')
 
     def __str__(self):
@@ -51,7 +50,8 @@ class CategoryTranslation(AbstractTranslation):
         unique_together = (('master', 'language'),)
     master = models.ForeignKey('Category', related_name='translations')
 
-    name = models.CharField(max_length=255)
+    slug = models.SlugField(max_length=255)
+    title = models.CharField(max_length=255)
     descrition = models.TextField(blank=True)
 
 

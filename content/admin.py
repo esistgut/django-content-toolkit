@@ -76,6 +76,7 @@ class BaseArticleAdmin(VersionAdmin, CKModelAdminMixin):
 
 
 class ContentTranslationInline(TranslationInline, CKModelAdminMixin):
+    prepopulated_fields = {'slug': ('title',)}
     model = ContentTranslation
 
 
@@ -88,6 +89,7 @@ class MediaCollectionAdmin(admin.ModelAdmin):
 
 
 class CategoryTranslationInline(TranslationInline):
+    prepopulated_fields = {'slug': ('title',)}
     model = CategoryTranslation
 
 
