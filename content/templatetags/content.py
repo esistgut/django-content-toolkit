@@ -8,5 +8,4 @@ register = template.Library()
 
 @register.assignment_tag()
 def content(slug):
-    asd = Content.objects.get(translations__slug=slug)
     return Content.objects.get(translations__slug=slug)

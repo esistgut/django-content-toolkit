@@ -80,7 +80,7 @@ class ContentTranslationInline(TranslationInline, CKModelAdminMixin):
 
 
 class MediaItemAdmin(CKMediaItemAdmin):
-    pass
+    inlines = (ContentTranslationInline, )
 
 
 class MediaCollectionAdmin(admin.ModelAdmin):

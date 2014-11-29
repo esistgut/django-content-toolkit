@@ -2,30 +2,30 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
-import mptt.fields
 from django.conf import settings
 import taggit.managers
+import mptt.fields
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
         ('contenttypes', '0001_initial'),
-        ('taggit', '0001_initial'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+        ('taggit', '0001_initial'),
     ]
 
     operations = [
         migrations.CreateModel(
             name='Category',
             fields=[
-                ('id', models.AutoField(auto_created=True, serialize=False, verbose_name='ID', primary_key=True)),
+                ('id', models.AutoField(serialize=False, auto_created=True, primary_key=True, verbose_name='ID')),
                 ('slug', models.SlugField(max_length=255)),
-                ('lft', models.PositiveIntegerField(db_index=True, editable=False)),
-                ('rght', models.PositiveIntegerField(db_index=True, editable=False)),
-                ('tree_id', models.PositiveIntegerField(db_index=True, editable=False)),
-                ('level', models.PositiveIntegerField(db_index=True, editable=False)),
-                ('parent', mptt.fields.TreeForeignKey(blank=True, related_name='children', null=True, to='content.Category')),
+                ('lft', models.PositiveIntegerField(editable=False, db_index=True)),
+                ('rght', models.PositiveIntegerField(editable=False, db_index=True)),
+                ('tree_id', models.PositiveIntegerField(editable=False, db_index=True)),
+                ('level', models.PositiveIntegerField(editable=False, db_index=True)),
+                ('parent', mptt.fields.TreeForeignKey(blank=True, null=True, related_name='children', to='content.Category')),
             ],
             options={
                 'abstract': False,
@@ -35,12 +35,12 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='CategoryTranslation',
             fields=[
-                ('id', models.AutoField(auto_created=True, serialize=False, verbose_name='ID', primary_key=True)),
-                ('language', models.CharField(choices=[('en', 'English'), ('it', 'Italian')], max_length=7)),
+                ('id', models.AutoField(serialize=False, auto_created=True, primary_key=True, verbose_name='ID')),
+                ('language', models.CharField(max_length=7, choices=[('en', 'English'), ('it', 'Italian')])),
                 ('name', models.CharField(max_length=255)),
                 ('descrition', models.TextField(blank=True)),
-                ('master', models.ForeignKey(to='content.Category', related_name='translations')),
-                ('polymorphic_ctype', models.ForeignKey(related_name='polymorphic_content.categorytranslation_set', null=True, to='contenttypes.ContentType', editable=False)),
+                ('master', models.ForeignKey(related_name='translations', to='content.Category')),
+                ('polymorphic_ctype', models.ForeignKey(null=True, editable=False, related_name='polymorphic_content.categorytranslation_set', to='contenttypes.ContentType')),
             ],
             options={
             },
@@ -49,7 +49,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Content',
             fields=[
-                ('id', models.AutoField(auto_created=True, serialize=False, verbose_name='ID', primary_key=True)),
+                ('id', models.AutoField(serialize=False, auto_created=True, primary_key=True, verbose_name='ID')),
                 ('published', models.BooleanField(default=True)),
             ],
             options={
@@ -60,7 +60,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='BaseArticle',
             fields=[
-                ('content_ptr', models.OneToOneField(serialize=False, auto_created=True, parent_link=True, to='content.Content', primary_key=True)),
+                ('content_ptr', models.OneToOneField(primary_key=True, serialize=False, auto_created=True, parent_link=True, to='content.Content')),
                 ('publication_time', models.DateTimeField()),
             ],
             options={
@@ -71,7 +71,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Article',
             fields=[
-                ('basearticle_ptr', models.OneToOneField(serialize=False, auto_created=True, parent_link=True, to='content.BaseArticle', primary_key=True)),
+                ('basearticle_ptr', models.OneToOneField(primary_key=True, serialize=False, auto_created=True, parent_link=True, to='content.BaseArticle')),
             ],
             options={
                 'abstract': False,
@@ -81,8 +81,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ContentTranslation',
             fields=[
-                ('id', models.AutoField(auto_created=True, serialize=False, verbose_name='ID', primary_key=True)),
-                ('language', models.CharField(choices=[('en', 'English'), ('it', 'Italian')], max_length=7)),
+                ('id', models.AutoField(serialize=False, auto_created=True, primary_key=True, verbose_name='ID')),
+                ('language', models.CharField(max_length=7, choices=[('en', 'English'), ('it', 'Italian')])),
                 ('slug', models.SlugField(max_length=255)),
                 ('title', models.CharField(max_length=255)),
             ],
@@ -93,7 +93,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='BaseArticleTranslation',
             fields=[
-                ('contenttranslation_ptr', models.OneToOneField(serialize=False, auto_created=True, parent_link=True, to='content.ContentTranslation', primary_key=True)),
+                ('contenttranslation_ptr', models.OneToOneField(primary_key=True, serialize=False, auto_created=True, parent_link=True, to='content.ContentTranslation')),
                 ('body', models.TextField()),
             ],
             options={
@@ -104,7 +104,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='MediaCollection',
             fields=[
-                ('content_ptr', models.OneToOneField(serialize=False, auto_created=True, parent_link=True, to='content.Content', primary_key=True)),
+                ('content_ptr', models.OneToOneField(primary_key=True, serialize=False, auto_created=True, parent_link=True, to='content.Content')),
             ],
             options={
                 'abstract': False,
@@ -114,17 +114,18 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='MediaItem',
             fields=[
-                ('id', models.AutoField(auto_created=True, serialize=False, verbose_name='ID', primary_key=True)),
+                ('content_ptr', models.OneToOneField(primary_key=True, serialize=False, auto_created=True, parent_link=True, to='content.Content')),
                 ('file', models.FileField(upload_to='')),
             ],
             options={
+                'abstract': False,
             },
-            bases=(models.Model,),
+            bases=('content.content',),
         ),
         migrations.CreateModel(
             name='Page',
             fields=[
-                ('content_ptr', models.OneToOneField(serialize=False, auto_created=True, parent_link=True, to='content.Content', primary_key=True)),
+                ('content_ptr', models.OneToOneField(primary_key=True, serialize=False, auto_created=True, parent_link=True, to='content.Content')),
             ],
             options={
                 'abstract': False,
@@ -140,13 +141,13 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='contenttranslation',
             name='master',
-            field=models.ForeignKey(to='content.Content', related_name='translations'),
+            field=models.ForeignKey(related_name='translations', to='content.Content'),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='contenttranslation',
             name='polymorphic_ctype',
-            field=models.ForeignKey(related_name='polymorphic_content.contenttranslation_set', null=True, to='contenttypes.ContentType', editable=False),
+            field=models.ForeignKey(null=True, editable=False, related_name='polymorphic_content.contenttranslation_set', to='contenttypes.ContentType'),
             preserve_default=True,
         ),
         migrations.AlterUniqueTogether(
@@ -156,7 +157,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='content',
             name='polymorphic_ctype',
-            field=models.ForeignKey(related_name='polymorphic_content.content_set', null=True, to='contenttypes.ContentType', editable=False),
+            field=models.ForeignKey(null=True, editable=False, related_name='polymorphic_content.content_set', to='contenttypes.ContentType'),
             preserve_default=True,
         ),
         migrations.AlterUniqueTogether(
@@ -178,7 +179,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='basearticle',
             name='tags',
-            field=taggit.managers.TaggableManager(blank=True, through='taggit.TaggedItem', help_text='A comma-separated list of tags.', to='taggit.Tag', verbose_name='Tags'),
+            field=taggit.managers.TaggableManager(blank=True, verbose_name='Tags', through='taggit.TaggedItem', help_text='A comma-separated list of tags.', to='taggit.Tag'),
             preserve_default=True,
         ),
         migrations.AddField(
