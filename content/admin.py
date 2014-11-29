@@ -100,7 +100,7 @@ class CategoryAdmin(admin.ModelAdmin):
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Article, BaseArticleAdmin)
 
-admin.site.register(MediaItem, MediaItemAdmin)
+admin.site.register(MediaItem)
 admin.site.register(MediaCollection, MediaCollectionAdmin)
 
 '''

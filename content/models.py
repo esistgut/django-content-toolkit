@@ -97,7 +97,7 @@ class PageTranslation(ContentTranslation):
     body = models.TextField()
     
 
-class MediaItem(Content):
+class MediaItem(TranslatedModel):
     file = models.FileField()
 
     def __str__(self):
