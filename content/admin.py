@@ -29,13 +29,6 @@ class CKModelAdminMixin(object):
 
 
 class CKMediaItemAdmin(admin.ModelAdmin, CKModelAdminMixin):
-    list_display = ('thumbnail', 'file', 'title')
-    prepopulated_fields = {'slug': ('file',), }
-
-    @staticmethod
-    def title(obj):
-        return obj.translation.title
-
     def thumbnail(self, obj):
         if self.list_display_links is not None:
             return u'<img src="%s" />' % get_thumbnail(obj.file, '125x125', crop='center').url
@@ -76,29 +69,26 @@ class TranslationInline(admin.StackedInline):
 
 class BaseArticleTranslationInline(TranslationInline, CKModelAdminMixin):
     model = BaseArticleTranslation
-    formset = AtLeastOneRequiredInlineFormSet
-    max = len(settings.LANGUAGES)
-    extra = 0
 
 
 class BaseArticleAdmin(VersionAdmin, CKModelAdminMixin):
     inlines = (BaseArticleTranslationInline, )
 
 
-class ContentTranslationInline(admin.StackedInline, CKModelAdminMixin):
+class ContentTranslationInline(TranslationInline, CKModelAdminMixin):
     model = ContentTranslation
-    max = len(settings.LANGUAGES)
-    extra = 0
 
 
 class MediaItemAdmin(CKMediaItemAdmin):
+    pass
+
+
+class MediaCollectionAdmin(admin.ModelAdmin):
     inlines = (ContentTranslationInline, )
 
 
-class CategoryTranslationInline(admin.StackedInline):
+class CategoryTranslationInline(TranslationInline):
     model = CategoryTranslation
-    max = len(settings.LANGUAGES)
-    extra = 1
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -109,7 +99,7 @@ admin.site.register(Category, CategoryAdmin)
 admin.site.register(Article, BaseArticleAdmin)
 
 admin.site.register(MediaItem, MediaItemAdmin)
-admin.site.register(MediaCollection)
+admin.site.register(MediaCollection, MediaCollectionAdmin)
 
 '''
 from polymorphic.admin import PolymorphicParentModelAdmin, PolymorphicChildModelAdmin

@@ -1,6 +1,9 @@
+import os
+
 from django.db import models
 from django.conf import settings
 from django.utils import translation
+from django.dispatch import receiver
 from django.core.exceptions import ImproperlyConfigured, ObjectDoesNotExist
 
 import reversion
@@ -53,7 +56,6 @@ class CategoryTranslation(AbstractTranslation):
 
 
 class Content(TranslatedModel, PolymorphicModel):
-    slug = models.SlugField(max_length=255)
     published = models.BooleanField(default=True)
 
     def __str__(self):
@@ -66,6 +68,7 @@ class ContentTranslation(AbstractTranslation):
 
     master = models.ForeignKey('Content', related_name='translations')
 
+    slug = models.SlugField(max_length=255)
     title = models.CharField(max_length=255)
     
 
@@ -94,9 +97,8 @@ class PageTranslation(ContentTranslation):
     body = models.TextField()
     
 
-class MediaItem(Content):
+class MediaItem(models.Model):
     file = models.FileField()
-    tags = TaggableManager(blank=True)
 
     def __str__(self):
         return self.file.url
@@ -104,6 +106,29 @@ class MediaItem(Content):
 
 class MediaCollection(Content):
     items = models.ManyToManyField(MediaItem)
+
+
+@receiver(models.signals.post_delete, sender=MediaItem)
+def auto_delete_file_on_delete(sender, instance, **kwargs):
+    if instance.file:
+        if os.path.isfile(instance.file.path):
+            os.remove(instance.file.path)
+
+
+@receiver(models.signals.pre_save, sender=MediaItem)
+def auto_delete_file_on_change(sender, instance, **kwargs):
+    if not instance.pk:
+        return False
+
+    try:
+        old_file = MediaItem.objects.get(pk=instance.pk).file
+    except MediaItem.DoesNotExist:
+        return False
+
+    new_file = instance.file
+    if not old_file == new_file:
+        if os.path.isfile(old_file.path):
+            os.remove(old_file.path)
 
 
 reversion.register(Category, follow=('translations', ))
