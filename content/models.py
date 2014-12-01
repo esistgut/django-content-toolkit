@@ -42,7 +42,7 @@ class Category(TranslatedModel, MPTTModel):
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children')
 
     def __str__(self):
-        return self.translation.name
+        return self.translation.title
 
 
 class CategoryTranslation(AbstractTranslation):
@@ -76,11 +76,11 @@ class BaseArticle(Content):
     publication_time = models.DateTimeField()
     authors = models.ManyToManyField(settings.AUTH_USER_MODEL, verbose_name="authors")
     categories = models.ManyToManyField(Category)
-    tags = TaggableManager(blank=True)
 
 
 class BaseArticleTranslation(ContentTranslation):
     body = models.TextField()
+    tags = TaggableManager(blank=True)
 
 
 class Article(BaseArticle):

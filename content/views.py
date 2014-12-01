@@ -1,9 +1,36 @@
+from django.views.generic import ListView
 from django.views.generic.detail import DetailView
+
+from taggit.models import Tag
+
+from .models import BaseArticleTranslation
+
+
+class ContentListView(ListView):
+    context_object_name = 'contents'
 
 
 class ContentDetailView(DetailView):
     context_object_name = 'content'
     template_name = 'content/content.html'
+
+    def get_object(self, queryset=None):
+        q = self.get_queryset()
+        q = q.filter(translations__slug=self.kwargs['slug'])
+        return q.get()
+
+
+class ArticleListView(ContentListView):
+    context_object_name = 'contents'
+
+    def get_queryset(self):
+        q = super().get_queryset()
+        if 'category' in self.kwargs:
+            q = q.filter(categories__translations__slug=self.kwargs['category'])
+        if 'tag' in self.kwargs:
+            tags = Tag.objects.filter(slug=self.kwargs['tag'])
+            q = q.filter(translations__tags=tags)
+        return q
 
 
 class ArticleDetailView(ContentDetailView):
