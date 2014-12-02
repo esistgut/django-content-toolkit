@@ -76,25 +76,25 @@ class ContentTranslation(AbstractTranslation):
     title = models.CharField(max_length=255)
     
 
-class BaseArticle(Content):
+class BaseEntry(Content):
     publication_time = models.DateTimeField()
     authors = models.ManyToManyField(settings.AUTH_USER_MODEL, verbose_name="authors")
     categories = models.ManyToManyField(Category)
 
     def get_absolute_url(self):
-        return reverse('article-detail', args=[
+        return reverse('entry-detail', args=[
             self.publication_time.year,
             self.publication_time.month,
             self.publication_time.day,
             self.translation.slug, ])
 
 
-class BaseArticleTranslation(ContentTranslation):
+class BaseEntryTranslation(ContentTranslation):
     body = models.TextField()
     tags = TaggableManager(blank=True)
 
 
-class Article(BaseArticle):
+class Entry(BaseEntry):
     image = models.ForeignKey('MediaItem')
 
 
@@ -146,5 +146,5 @@ reversion.register(Content, follow=('translations', ))
 reversion.register(ContentTranslation)
 reversion.register(Page)
 reversion.register(PageTranslation)
-reversion.register(BaseArticle, follow=('categories', 'authors', ))
-reversion.register(BaseArticleTranslation)
+reversion.register(BaseEntry, follow=('categories', 'authors', ))
+reversion.register(BaseEntryTranslation)

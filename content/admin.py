@@ -9,7 +9,7 @@ from sorl.thumbnail import get_thumbnail
 
 from .forms import AtLeastOneRequiredInlineFormSet
 from .models import (
-    ContentTranslation, BaseArticleTranslation, Article, Page, PageTranslation,
+    ContentTranslation, BaseEntryTranslation, Entry, Page, PageTranslation,
     Category, CategoryTranslation, MediaItem, MediaCollection,
 )
 
@@ -75,12 +75,12 @@ class PageAdmin(VersionAdmin, CKModelAdminMixin):
     inlines = (PageTranslationInline, )
 
 
-class BaseArticleTranslationInline(TranslationInline, CKModelAdminMixin):
-    model = BaseArticleTranslation
+class BaseEntryTranslationInline(TranslationInline, CKModelAdminMixin):
+    model = BaseEntryTranslation
 
 
-class BaseArticleAdmin(VersionAdmin, CKModelAdminMixin):
-    inlines = (BaseArticleTranslationInline, )
+class BaseEntryAdmin(VersionAdmin, CKModelAdminMixin):
+    inlines = (BaseEntryTranslationInline, )
 
 
 class ContentTranslationInline(TranslationInline, CKModelAdminMixin):
@@ -108,7 +108,7 @@ class CategoryAdmin(admin.ModelAdmin):
 admin.site.register(Page, PageAdmin)
 
 admin.site.register(Category, CategoryAdmin)
-admin.site.register(Article, BaseArticleAdmin)
+admin.site.register(Entry, BaseEntryAdmin)
 
 admin.site.register(MediaItem)
 admin.site.register(MediaCollection, MediaCollectionAdmin)
@@ -121,14 +121,14 @@ class ContentChildAdmin(PolymorphicChildModelAdmin, CKModelAdminMixin):
     base_model = Content
 
 
-class ChildBaseArticleAdmin(BaseArticleAdmin, ContentChildAdmin):
+class ChildBaseEntryAdmin(BaseEntryAdmin, ContentChildAdmin):
     pass
 
 
 class ContentAdmin(PolymorphicParentModelAdmin):
     base_model = Content
     child_models = (
-        (Article, ContentChildAdmin),
+        (Entry, ContentChildAdmin),
         (Page, ContentChildAdmin),
     )
 

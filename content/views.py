@@ -3,7 +3,7 @@ from django.views.generic.detail import DetailView
 
 from taggit.models import Tag
 
-from .models import BaseArticleTranslation
+from .models import BaseEntryTranslation
 
 
 class ContentListView(ListView):
@@ -20,7 +20,7 @@ class ContentDetailView(DetailView):
         return q.get()
 
 
-class ArticleListView(ContentListView):
+class EntryListView(ContentListView):
     context_object_name = 'contents'
 
     def get_queryset(self):
@@ -33,8 +33,8 @@ class ArticleListView(ContentListView):
         return q
 
 
-class ArticleDetailView(ContentDetailView):
-    template_name = 'content/article.html'
+class EntryDetailView(ContentDetailView):
+    template_name = 'content/entry.html'
 
     def get_queryset(self):
         q = super().get_queryset()
