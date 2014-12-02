@@ -4,6 +4,7 @@ from django.db import models
 from django.conf import settings
 from django.utils import translation
 from django.dispatch import receiver
+from django.core.urlresolvers import reverse
 from django.core.exceptions import ImproperlyConfigured, ObjectDoesNotExist
 
 import reversion
@@ -50,13 +51,16 @@ class CategoryTranslation(AbstractTranslation):
         unique_together = (('master', 'language'),)
     master = models.ForeignKey('Category', related_name='translations')
 
-    slug = models.SlugField(max_length=255)
+    slug = models.SlugField(max_length=255, unique=True)
     title = models.CharField(max_length=255)
     descrition = models.TextField(blank=True)
 
 
 class Content(TranslatedModel, PolymorphicModel):
     published = models.BooleanField(default=True)
+
+    def get_absolute_url(self):
+        return reverse('content-detail', args=[self.translation.slug, ])
 
     def __str__(self):
         return self.translation.title
@@ -68,7 +72,7 @@ class ContentTranslation(AbstractTranslation):
 
     master = models.ForeignKey('Content', related_name='translations')
 
-    slug = models.SlugField(max_length=255)
+    slug = models.SlugField(max_length=255, unique=True)
     title = models.CharField(max_length=255)
     
 
@@ -76,6 +80,13 @@ class BaseArticle(Content):
     publication_time = models.DateTimeField()
     authors = models.ManyToManyField(settings.AUTH_USER_MODEL, verbose_name="authors")
     categories = models.ManyToManyField(Category)
+
+    def get_absolute_url(self):
+        return reverse('article-detail', args=[
+            self.publication_time.year,
+            self.publication_time.month,
+            self.publication_time.day,
+            self.translation.slug, ])
 
 
 class BaseArticleTranslation(ContentTranslation):
@@ -92,8 +103,6 @@ class Page(Content):
 
 
 class PageTranslation(ContentTranslation):
-    class Meta:
-        abstract = True
     body = models.TextField()
     
 
@@ -135,5 +144,7 @@ reversion.register(Category, follow=('translations', ))
 reversion.register(CategoryTranslation)
 reversion.register(Content, follow=('translations', ))
 reversion.register(ContentTranslation)
+reversion.register(Page)
+reversion.register(PageTranslation)
 reversion.register(BaseArticle, follow=('categories', 'authors', ))
 reversion.register(BaseArticleTranslation)
