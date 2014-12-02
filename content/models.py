@@ -84,8 +84,8 @@ class BaseEntry(Content):
     def get_absolute_url(self):
         return reverse('entry-detail', args=[
             self.publication_time.year,
-            self.publication_time.month,
-            self.publication_time.day,
+            self.publication_time.strftime('%m'),
+            self.publication_time.strftime('%d'),
             self.translation.slug, ])
 
 

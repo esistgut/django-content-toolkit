@@ -22,7 +22,7 @@ urlpatterns = patterns(
         name='entry-list-by-tag'
     ),
     url(
-        regex=r'^blog/(?P<year>\d+)/(?P<month>\d+)/(?P<day>\d+)/(?P<slug>[\w-]+)/$',
+        regex=r'^blog/(?P<year>\d{4})/(?P<month>\d{2})/(?P<day>\d{2})/(?P<slug>[\w-]+)/$',
         view=EntryDetailView.as_view(model=BaseEntry),
         name='entry-detail'
     ),
