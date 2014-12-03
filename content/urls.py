@@ -8,7 +8,7 @@ urlpatterns = patterns(
     '',
     url(
         regex=r'^blog/$',
-        view=ContentListView.as_view(model=Entry, template_name='content/entry_list.html'),
+        view=ContentListView.as_view(model=BaseEntry, template_name='content/entry_list.html'),
         name='entry-list'
     ),
     url(
