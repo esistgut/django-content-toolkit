@@ -15,7 +15,14 @@ setup(
     license='MIT',
     author='Giacomo Graziosi',
     author_email='g.graziosi@gmail.com',
-    packages=['content', 'content.templatetags', 'content.migrations', ],
+    packages=[
+        'content',
+        'content.templatetags',
+        'content.migrations',
+        'accounts',
+        'accounts.migrations',
+        'example',
+    ],
     include_package_data=True,
     install_requires=[
         'Django',
