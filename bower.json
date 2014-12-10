@@ -1,0 +1,22 @@
+{
+  "name": "django-content-toolkit",
+  "version": "0.1.4",
+  "homepage": "https://github.com/esistgut/django-content-toolkit",
+  "authors": [
+    "Giacomo Graziosi <g.graziosi@gmail.com>"
+  ],
+  "private": true,
+  "description": "This is a basic toolkit to create content management systems with Django.",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "content/static/content",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "ckeditor": "~4.4.6"
+  }
+}

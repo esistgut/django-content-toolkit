@@ -8,7 +8,7 @@ def read(*paths):
 
 setup(
     name='django-content-toolkit',
-    version='0.1.3',
+    version='0.1.4',
     description='A simple Django package for model translations',
     long_description=(read('README.rst')),
     url='https://github.com/esistgut/django-content-toolkit',
