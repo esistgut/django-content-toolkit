@@ -29,6 +29,9 @@ class CKModelAdminMixin(object):
 
 
 class CKMediaItemAdmin(admin.ModelAdmin, CKModelAdminMixin):
+    list_display = ('thumbnail', 'file', )
+
+
     def thumbnail(self, obj):
         if self.list_display_links is not None:
             return u'<img src="%s" />' % get_thumbnail(obj.file, '125x125', crop='center').url
@@ -110,7 +113,7 @@ admin.site.register(Page, PageAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Entry, BaseEntryAdmin)
 
-admin.site.register(MediaItem)
+admin.site.register(MediaItem, MediaItemAdmin)
 admin.site.register(MediaCollection, MediaCollectionAdmin)
 
 '''

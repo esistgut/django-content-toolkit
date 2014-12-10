@@ -29,7 +29,8 @@ setup(
         'django-polymorphic',
         'django-reversion',
         'django-mptt',
-        'django-taggit'
+        'django-taggit',
+        'django-sortedm2m',
     ],
     classifiers=[
         'Environment :: Web Environment',

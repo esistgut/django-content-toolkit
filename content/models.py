@@ -11,6 +11,7 @@ import reversion
 from polymorphic import PolymorphicModel
 from mptt.models import MPTTModel, TreeForeignKey
 from taggit.managers import TaggableManager
+from sortedm2m.fields import SortedManyToManyField
 
 
 class TranslatedModel(models.Model):
@@ -114,7 +115,7 @@ class MediaItem(TranslatedModel):
 
 
 class MediaCollection(Content):
-    items = models.ManyToManyField(MediaItem)
+    items = SortedManyToManyField(MediaItem)
 
 
 @receiver(models.signals.post_delete, sender=MediaItem)
