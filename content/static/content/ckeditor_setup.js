@@ -20,26 +20,6 @@ django.jQuery(function(){
     django.jQuery('textarea').each(function(index){
         CKEDITOR.replace((this), config);
     })
-    
-    
-    function getUrlParam( paramName ) {
-        var reParam = new RegExp( '(?:[\?&]|&)' + paramName + '=([^&]+)', 'i' ) ;
-        var match = window.location.search.match(reParam) ;
-
-        return ( match && match.length > 1 ) ? match[ 1 ] : null ;
-    }
-
-    if (getUrlParam( 'CKEditorFuncNum' )) {
-        document.cookie='CKEditorFuncNum=' + getUrlParam( 'CKEditorFuncNum' );
-    }
-    
-    django.jQuery('.cklink').on('click', function () {
-        var funcNum = getUrlParam( 'CKEditorFuncNum' );
-        var fileUrl = django.jQuery(this).attr('href');
-        window.opener.CKEDITOR.tools.callFunction( funcNum, fileUrl );
-        window.close()
-    });
-
 });
 
 

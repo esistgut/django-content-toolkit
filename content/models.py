@@ -2,6 +2,7 @@ import os
 
 from django.db import models
 from django.conf import settings
+from django.conf import global_settings
 from django.utils import translation
 from django.dispatch import receiver
 from django.core.urlresolvers import reverse
@@ -37,7 +38,7 @@ class AbstractTranslation(PolymorphicModel):
     def master(self):
         raise ImproperlyConfigured
 
-    language = models.CharField(max_length=7, choices=settings.LANGUAGES)
+    language = models.CharField(max_length=7, choices=global_settings.LANGUAGES)
 
 
 class Category(TranslatedModel, MPTTModel):
@@ -107,7 +108,7 @@ class PageTranslation(ContentTranslation):
     body = models.TextField()
     
 
-class MediaItem(TranslatedModel):
+class MediaItem(Content):
     file = models.FileField()
 
     def __str__(self):

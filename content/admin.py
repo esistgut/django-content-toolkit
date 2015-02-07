@@ -31,6 +31,11 @@ class CKModelAdminMixin(object):
 class CKMediaItemAdmin(admin.ModelAdmin, CKModelAdminMixin):
     list_display = ('thumbnail', 'file', )
 
+    class Media:
+        js = [
+            static('admin/js/urlify.js'),
+            static('content/mediaitem.js'),
+        ]
 
     def thumbnail(self, obj):
         if self.list_display_links is not None:
@@ -67,7 +72,12 @@ class CKMediaItemAdmin(admin.ModelAdmin, CKModelAdminMixin):
 class TranslationInline(admin.StackedInline):
     formset = AtLeastOneRequiredInlineFormSet
     max = len(settings.LANGUAGES)
-    extra = 0
+    extra = 1
+
+    def formfield_for_choice_field(self, db_field, request=None, **kwargs):
+        if db_field.name == 'language':
+            kwargs['choices'] = settings.LANGUAGES
+        return super(TranslationInline, self).formfield_for_choice_field(db_field, request, **kwargs)
 
 
 class PageTranslationInline(TranslationInline, CKModelAdminMixin):
