@@ -74,6 +74,11 @@ class TranslationInline(admin.StackedInline):
     max = len(settings.LANGUAGES)
     extra = 1
 
+    def get_extra(self, request, obj=None, **kwargs):
+        if obj:
+            return 0
+        return self.extra
+
     def formfield_for_choice_field(self, db_field, request=None, **kwargs):
         if db_field.name == 'language':
             kwargs['choices'] = settings.LANGUAGES
