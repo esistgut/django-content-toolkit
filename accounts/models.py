@@ -29,8 +29,9 @@ class UserManager(BaseUserManager):
     def create_superuser(self, email, password, **extra_fields):
         return self._create_user(email, password, True, True, **extra_fields)
 
-    def register_user(self, email, request):
-        password = self.make_random_password()
+    def register_user(self, email, request, password=None):
+        if not password:
+            password = self.make_random_password()
         user = self.create_user(email, password)
         auth_user = authenticate(username=email, password=password)
         login(request, auth_user)
