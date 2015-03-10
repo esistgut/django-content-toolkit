@@ -106,6 +106,14 @@ class Page(Content):
 
 class PageTranslation(ContentTranslation):
     body = models.TextField()
+
+
+class Block(Content):
+    pass
+
+
+class BlockTranslation(ContentTranslation):
+    body = models.TextField()
     
 
 class MediaItem(Content):
