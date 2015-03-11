@@ -9,7 +9,7 @@ from sorl.thumbnail import get_thumbnail
 
 from .forms import AtLeastOneRequiredInlineFormSet
 from .models import (
-    ContentTranslation, BaseEntryTranslation, Entry, Page, PageTranslation,
+    ContentTranslation, BaseEntryTranslation, Entry, Page, PageTranslation, Block, BlockTranslation,
     Category, CategoryTranslation, MediaItem, MediaCollection,
 )
 
@@ -93,6 +93,14 @@ class PageAdmin(VersionAdmin, CKModelAdminMixin):
     inlines = (PageTranslationInline, )
 
 
+class BlockTranslationInline(TranslationInline, CKModelAdminMixin):
+    model = BlockTranslation
+
+
+class BlockAdmin(VersionAdmin, CKModelAdminMixin):
+    inlines = (BlockTranslationInline, )
+
+
 class BaseEntryTranslationInline(TranslationInline, CKModelAdminMixin):
     model = BaseEntryTranslation
 
@@ -124,6 +132,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Page, PageAdmin)
+admin.site.register(Block, BlockAdmin)
 
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Entry, BaseEntryAdmin)
