@@ -8,22 +8,22 @@ urlpatterns = patterns(
     '',
     url(
         regex=r'^blog/$',
-        view=ContentListView.as_view(model=BaseEntry, template_name='content/entry_list.html'),
+        view=ContentListView.as_view(model=Entry, template_name='content/entry_list.html'),
         name='entry-list'
     ),
     url(
         regex=r'^blog/category/(?P<category>[\w-]+)/$',
-        view=EntryListView.as_view(model=BaseEntry, template_name='content/entry_list.html'),
+        view=EntryListView.as_view(model=Entry, template_name='content/entry_list.html'),
         name='entry-list-by-category'
     ),
     url(
         regex=r'^blog/tag/(?P<tag>[\w-]+)/$',
-        view=EntryListView.as_view(model=BaseEntry, template_name='content/entry_list.html'),
+        view=EntryListView.as_view(model=Entry, template_name='content/entry_list.html'),
         name='entry-list-by-tag'
     ),
     url(
         regex=r'^blog/(?P<year>\d{4})/(?P<month>\d{2})/(?P<day>\d{2})/(?P<slug>[\w-]+)/$',
-        view=EntryDetailView.as_view(model=BaseEntry),
+        view=EntryDetailView.as_view(model=Entry),
         name='entry-detail'
     ),
     url(
