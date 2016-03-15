@@ -9,7 +9,7 @@ from django.core.urlresolvers import reverse
 from django.core.exceptions import ImproperlyConfigured, ObjectDoesNotExist
 
 import reversion
-from polymorphic import PolymorphicModel
+from polymorphic.models import PolymorphicModel
 from mptt.models import MPTTModel, TreeForeignKey
 from taggit.managers import TaggableManager
 from sortedm2m.fields import SortedManyToManyField
