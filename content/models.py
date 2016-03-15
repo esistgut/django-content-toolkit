@@ -8,7 +8,7 @@ from django.dispatch import receiver
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ImproperlyConfigured, ObjectDoesNotExist
 
-import reversion
+from reversion import revisions as reversion
 from polymorphic.models import PolymorphicModel
 from mptt.models import MPTTModel, TreeForeignKey
 from taggit.managers import TaggableManager

@@ -4,7 +4,7 @@ from django.db import models
 from django.contrib import admin
 from django.contrib.staticfiles.templatetags.staticfiles import static
 
-from reversion import VersionAdmin
+from reversion.admin import VersionAdmin
 from sorl.thumbnail import get_thumbnail
 
 from .forms import AtLeastOneRequiredInlineFormSet
