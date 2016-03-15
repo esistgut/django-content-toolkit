@@ -7,7 +7,7 @@ from django.contrib.auth.models import (
     AbstractBaseUser, PermissionsMixin, BaseUserManager
 )
 
-import reversion
+from reversion import revisions as reversion
 
 
 class UserManager(BaseUserManager):
